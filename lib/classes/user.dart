@@ -51,6 +51,8 @@ class User {
         'dateOfBirth: $dateOfBirth\n'
         'age: ${age()}\n'
         'role: $role\n'
-        'money: $money';
+        'money: $money\n'
+        'username: $username\n'
+        'password: $password';
   }
 }

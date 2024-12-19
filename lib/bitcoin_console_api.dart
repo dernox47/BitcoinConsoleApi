@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:bitcoin_console_api/classes/file_handler.dart';
 import 'package:bitcoin_console_api/classes/user.dart';
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
-List<User> users = [];
-Map<String, String> loginCombinations = {};
+
+List<User> users = FileHandler('users.json').getDataFromJson();
 late User selectedUser;
 
 String inputCheck(String inputText) {
@@ -19,26 +21,29 @@ String inputCheck(String inputText) {
 void loginFrame() {
   print('Login');
   String? usernameInput = inputCheck('\tEnter your username: ').toLowerCase();
-  if (!loginCombinations.keys.contains(usernameInput)) {
+  var findUser = users.firstWhereOrNull((x) => x.username == usernameInput);
+
+  if (findUser == null) {
     do {
       print('User with this username does not exist.');
       usernameInput = inputCheck('\tEnter your username: ').toLowerCase();
-    } while (!loginCombinations.keys.contains(usernameInput));
+    } while (findUser == null);
   }
   String? passwordInput = inputCheck('\tEnter your password: ');
-  if (loginCombinations[usernameInput] != passwordInput) {
+  var correctPassword = findUser.password;
+
+  if (correctPassword != passwordInput) {
     do {
       print('Incorrect password.');
       passwordInput = inputCheck('\tEnter your password: ');
-    } while (loginCombinations[usernameInput] != passwordInput);
+    } while (correctPassword != passwordInput);
   }
-  selectedUser = users.firstWhere((x) => x.username == usernameInput);
+  selectedUser = findUser;
 }
 
 void main() {
   bool appRunning = true;
   bool authTypeWaiting = true;
-
   while (appRunning) {
     while (authTypeWaiting) {
       stdout.write('Login or register? (l/r): ');
@@ -72,21 +77,22 @@ void main() {
           }
 
           String passwordInput = inputCheck('\tPassword: ');
-
+          var nextId = users.sortedBy((x) => x.id.toString()).last.id + 1;
           User user1 = User(
-            id: 0,
+            id: nextId,
             name: nameInput,
             dateOfBirth: dateOfBirthInput,
             role: 'user',
             username: usernameInput,
             password: passwordInput
           );
+
           if (user1.age() < 18) {
             print('The age requirement is 18.');
             break;
           } else {
             users.add(user1);
-            loginCombinations[usernameInput] = passwordInput;
+            FileHandler('users.json').loadDataToJson(users);
           }
 
           loginFrame();
