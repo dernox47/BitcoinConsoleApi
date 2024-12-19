@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
   String dateOfBirth;
   late Role _role;
   late int _money;
+  String username;
+  String password;
 
   // Getters
   int get id => _id;
@@ -18,7 +20,7 @@ import 'package:intl/intl.dart';
   set role(v) => v == 'user' ? _role = Role.user : _role = Role.admin;
   set money(int v) => v < 0 ? _money = 0 : _money = v;
 
-  User(this._id, this.name, this.dateOfBirth, String role, {int money = 0}) {
+  User(this._id, this.name, this.dateOfBirth, String role, this.username, this.password, {int money = 0}) {
     this.role = role;
     _money = money;
   }
