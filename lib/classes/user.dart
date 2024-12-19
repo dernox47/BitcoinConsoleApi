@@ -1,9 +1,13 @@
 import 'package:bitcoin_console_api/enums.dart';
 import 'package:intl/intl.dart';
+import 'package:json_annotation/json_annotation.dart';
 
- class User {
+part 'user.g.dart';
+
+@JsonSerializable()
+class User {
   // Properties
-  final int _id;
+  int id;
   String name;
   String dateOfBirth;
   late Role _role;
@@ -12,7 +16,6 @@ import 'package:intl/intl.dart';
   String password;
 
   // Getters
-  int get id => _id;
   Role get role => _role;
   int get money => _money;
 
@@ -20,23 +23,34 @@ import 'package:intl/intl.dart';
   set role(v) => v == 'user' ? _role = Role.user : _role = Role.admin;
   set money(int v) => v < 0 ? _money = 0 : _money = v;
 
-  User(this._id, this.name, this.dateOfBirth, String role, this.username, this.password, {int money = 0}) {
+  User(
+      {required this.id,
+      required this.name,
+      required this.dateOfBirth,
+      required String role,
+      required this.username,
+      required this.password,
+      int money = 0}) {
     this.role = role;
     _money = money;
   }
 
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserToJson(this);
+
   int age() {
-    return DateTime.now().year - DateFormat('yyyy-MM-dd').parse(dateOfBirth).year;
+    return DateTime.now().year -
+        DateFormat('yyyy-MM-dd').parse(dateOfBirth).year;
   }
 
   @override
   String toString() {
-    return 
-      'id: $id\n' 
-      'name: $name\n'
-      'dateOfBirth: $dateOfBirth\n'
-      'age: ${age()}\n'
-      'role: $role\n'
-      'money: $money';
+    return 'id: $id\n'
+        'name: $name\n'
+        'dateOfBirth: $dateOfBirth\n'
+        'age: ${age()}\n'
+        'role: $role\n'
+        'money: $money';
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:bitcoin_console_api/classes/user.dart';
-import 'package:bitcoin_console_api/enums.dart';
 import 'package:intl/intl.dart';
 
 List<User> users = [];
@@ -74,8 +73,14 @@ void main() {
 
           String passwordInput = inputCheck('\tPassword: ');
 
-          User user1 = User(0, nameInput, dateOfBirthInput, 'user',
-              usernameInput, passwordInput);
+          User user1 = User(
+            id: 0,
+            name: nameInput,
+            dateOfBirth: dateOfBirthInput,
+            role: 'user',
+            username: usernameInput,
+            password: passwordInput
+          );
           if (user1.age() < 18) {
             print('The age requirement is 18.');
             break;

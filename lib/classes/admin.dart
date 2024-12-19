@@ -1,6 +1,11 @@
 import 'package:bitcoin_console_api/classes/user.dart';
 
 class Admin extends User {
-  Admin(super.id, super.name, super.dateOfBirth, super.role, super.username, super.password);
-  
+  Admin(
+      {required super.id,
+      required super.name,
+      required super.dateOfBirth,
+      required super.role,
+      required super.username,
+      required super.password});
 }
