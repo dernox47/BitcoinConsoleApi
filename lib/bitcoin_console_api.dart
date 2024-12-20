@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bitcoin_console_api/classes/bitcoin_api_handler.dart';
 import 'package:bitcoin_console_api/classes/file_handler.dart';
 import 'package:bitcoin_console_api/classes/user.dart';
 import 'package:intl/intl.dart';
@@ -9,43 +10,14 @@ import 'package:collection/collection.dart';
 late List<User> users;
 late User selectedUser;
 
-String inputCheck(String inputText) {
-  String variable;
-  do {
-    stdout.write(inputText);
-    variable = stdin.readLineSync()!;
-  } while (variable == "");
-  return variable;
-}
-
-User loginFrame() {
-  print('Login');
-  String? usernameInput = inputCheck('\tEnter your username: ').toLowerCase();
-  var findUser = users.firstWhereOrNull((x) => x.username == usernameInput);
-
-  if (findUser == null) {
-    do {
-      print('User with this username does not exist.');
-      usernameInput = inputCheck('\tEnter your username: ').toLowerCase();
-    } while (findUser == null);
-  }
-  String? passwordInput = inputCheck('\tEnter your password: ');
-  var correctPassword = findUser.password;
-
-  if (correctPassword != passwordInput) {
-    do {
-      print('Incorrect password.');
-      passwordInput = inputCheck('\tEnter your password: ');
-    } while (correctPassword != passwordInput);
-  }
-  return findUser;
-}
-
-void main() {
-  users = FileHandler('users.json').getDataFromJson();
+void main() async {
+  users = await FileHandler('users.json').getDataFromJson();
+  final currentData = await BitcoinApiHandler.getCurrentData();
+  final currentBitcoinData = currentData['data'][0];
 
   bool appRunning = true;
   bool authTypeWaiting = true;
+  
   while (appRunning) {
     while (authTypeWaiting) {
       stdout.write('Login or register? (l/r): ');
@@ -108,6 +80,40 @@ void main() {
     print("\x1B[2J\x1B[0;0H");
     print('Welcome ${selectedUser.name}!\n'
           '(${selectedUser.age()} years old)');
+    print(DateTime.now());
+    
     break;
   }
+}
+
+String inputCheck(String inputText) {
+  String variable;
+  do {
+    stdout.write(inputText);
+    variable = stdin.readLineSync()!;
+  } while (variable == "");
+  return variable;
+}
+
+User loginFrame() {
+  print('Login');
+  String? usernameInput = inputCheck('\tEnter your username: ').toLowerCase();
+  var findUser = users.firstWhereOrNull((x) => x.username == usernameInput);
+
+  if (findUser == null) {
+    do {
+      print('User with this username does not exist.');
+      usernameInput = inputCheck('\tEnter your username: ').toLowerCase();
+    } while (findUser == null);
+  }
+  String? passwordInput = inputCheck('\tEnter your password: ');
+  var correctPassword = findUser.password;
+
+  if (correctPassword != passwordInput) {
+    do {
+      print('Incorrect password.');
+      passwordInput = inputCheck('\tEnter your password: ');
+    } while (correctPassword != passwordInput);
+  }
+  return findUser;
 }
