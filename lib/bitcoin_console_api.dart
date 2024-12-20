@@ -18,7 +18,7 @@ String inputCheck(String inputText) {
   return variable;
 }
 
-void loginFrame() {
+User loginFrame() {
   print('Login');
   String? usernameInput = inputCheck('\tEnter your username: ').toLowerCase();
   var findUser = users.firstWhereOrNull((x) => x.username == usernameInput);
@@ -38,7 +38,7 @@ void loginFrame() {
       passwordInput = inputCheck('\tEnter your password: ');
     } while (correctPassword != passwordInput);
   }
-  selectedUser = findUser;
+  return findUser;
 }
 
 void main() {
@@ -51,7 +51,7 @@ void main() {
       switch (authType) {
         // Login
         case 'l':
-          loginFrame();
+          selectedUser = loginFrame();
 
           authTypeWaiting = false;
           break;
@@ -78,7 +78,7 @@ void main() {
 
           String passwordInput = inputCheck('\tPassword: ');
           var nextId = users.sortedBy((x) => x.id.toString()).last.id + 1;
-          User user1 = User(
+          User testUser = User(
             id: nextId,
             name: nameInput,
             dateOfBirth: dateOfBirthInput,
@@ -87,15 +87,15 @@ void main() {
             password: passwordInput
           );
 
-          if (user1.age() < 18) {
+          if (testUser.age() < 18) {
             print('The age requirement is 18.');
             break;
           } else {
-            users.add(user1);
+            users.add(testUser);
             FileHandler('users.json').loadDataToJson(users);
           }
 
-          loginFrame();
+          selectedUser = loginFrame();
 
           authTypeWaiting = false;
           break;
