@@ -10,29 +10,30 @@ class User {
   int id;
   String name;
   String dateOfBirth;
-  late Role _role;
-  late int _money;
   String username;
   String password;
+  late Map<String, double> balance;
+  late Role _role;
 
   // Getters
   Role get role => _role;
-  int get money => _money;
 
   // Setters
   set role(v) => v == 'user' ? _role = Role.user : _role = Role.admin;
-  set money(int v) => v < 0 ? _money = 0 : _money = v;
 
-  User(
-      {required this.id,
-      required this.name,
-      required this.dateOfBirth,
-      required String role,
-      required this.username,
-      required this.password,
-      int money = 0}) {
+  User({
+    required this.id,
+    required this.name,
+    required this.dateOfBirth,
+    required this.username,
+    required this.password,
+    required String role,
+  }) {
+    balance = {
+      'USD': 0,
+      'BTC': 0
+    };
     this.role = role;
-    _money = money;
   }
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -51,7 +52,7 @@ class User {
         'dateOfBirth: $dateOfBirth\n'
         'age: ${age()}\n'
         'role: $role\n'
-        'money: $money\n'
+        'money: $balance\n'
         'username: $username\n'
         'password: $password';
   }
