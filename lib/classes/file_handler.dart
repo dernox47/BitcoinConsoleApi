@@ -10,10 +10,12 @@ class FileHandler {
     file = File(fileName);
   }
 
-  List<User> getDataFromJson() {
-    List<dynamic> data = jsonDecode(file.readAsStringSync());
-    List<User> users = data.map((data) => User.fromJson(data)).toList();
-    return users;
+  Future<List<User>> getDataFromJson() async {
+    return await Future.delayed(Duration(seconds: 2), () {
+      List<dynamic> data = jsonDecode(file.readAsStringSync());
+      List<User> users = data.map((data) => User.fromJson(data)).toList();
+      return users;
+    });
   }
 
   void loadDataToJson(List<User> list) {
