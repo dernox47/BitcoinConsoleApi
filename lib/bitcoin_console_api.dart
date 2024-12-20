@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
 
 
-List<User> users = FileHandler('users.json').getDataFromJson();
+late List<User> users;
 late User selectedUser;
 
 String inputCheck(String inputText) {
@@ -42,6 +42,8 @@ User loginFrame() {
 }
 
 void main() {
+  users = FileHandler('users.json').getDataFromJson();
+
   bool appRunning = true;
   bool authTypeWaiting = true;
   while (appRunning) {
